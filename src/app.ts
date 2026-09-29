@@ -4,6 +4,7 @@ import cors from "cors";
 import path from "path";
 import cookieParser from "cookie-parser";
 import { apiRouter } from "./routes";
+import globalErrorHandler from "./middleware/globalError";
 
 const app = express();
 
@@ -24,5 +25,6 @@ app.use("/api/v1", apiRouter);
 app.get("/", (req, res) => {
     res.send("Hello World");
 });
+app.use(globalErrorHandler);
 
 export default app;
