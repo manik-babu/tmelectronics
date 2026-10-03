@@ -24,7 +24,11 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1", apiRouter);
 app.get("/", (req, res) => {
-    res.send("Hello World");
+    res.status(200).json({
+        ok: true,
+        message: "Welcome to the Electronics Inventory Management System API",
+        data: null
+    });
 });
 app.use(notFoundHandler);
 app.use(globalErrorHandler);

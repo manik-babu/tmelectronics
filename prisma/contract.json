@@ -4,7 +4,7 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
-    "user": {
+    "users": {
       "model": "User",
       "namespace": "public"
     }
@@ -23,6 +23,10 @@
               {
                 "name": "USER",
                 "value": "USER"
+              },
+              {
+                "name": "GUEST",
+                "value": "GUEST"
               }
             ]
           }
@@ -59,21 +63,21 @@
                 }
               },
               "name": {
-                "nullable": false,
+                "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
               "password": {
-                "nullable": false,
+                "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
               "phone": {
-                "nullable": false,
+                "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -122,7 +126,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "user"
+              "table": "users"
             }
           }
         }
@@ -134,12 +138,12 @@
       "public": {
         "entries": {
           "table": {
-            "user": {
+            "users": {
               "checks": [
                 {
-                  "expression": "\"role\" IN ('ADMIN', 'USER')",
-                  "name": "user_role_check_5b1978b5",
-                  "prefix": "user_role_check"
+                  "expression": "\"role\" IN ('ADMIN', 'USER', 'GUEST')",
+                  "name": "users_role_check_5a01ffab",
+                  "prefix": "users_role_check"
                 }
               ],
               "columns": {
@@ -170,17 +174,17 @@
                 "name": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": false
+                  "nullable": true
                 },
                 "password": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": false
+                  "nullable": true
                 },
                 "phone": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": false
+                  "nullable": true
                 },
                 "role": {
                   "codecId": "pg/text@1",
@@ -224,7 +228,8 @@
               "kind": "valueSet",
               "values": [
                 "ADMIN",
-                "USER"
+                "USER",
+                "GUEST"
               ]
             }
           }
@@ -233,10 +238,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "f290b6f6ab150c644efbf92436285b61a654a314d8049b4a7b449598d4079ba6"
+    "storageHash": "b28184281decbd02cae4c617f8794a6ba7c44b099ec633a4fb348dad8aa7ded4"
   },
   "execution": {
-    "executionHash": "c6c68895811eac8510a3105769605e248431b77d0f5294ccf29b9aa8ce355232",
+    "executionHash": "a74f8ef3d7079ef39287e5f6ac28bf153e0ed450d5be3a05dba2e21a4583a662",
     "mutations": {
       "defaults": [
         {
@@ -247,7 +252,7 @@
           "ref": {
             "column": "id",
             "namespace": "public",
-            "table": "user"
+            "table": "users"
           }
         }
       ]
