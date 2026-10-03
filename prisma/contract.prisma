@@ -28,8 +28,8 @@ model Product {
   discountedPrice   Float?
   offerName   String?
   sku         String  @unique
-  brand       String
-  category    String?
+  brand       String?
+  category    String
   rating     Float?
 
   createdAt   DateTime @default(now())
