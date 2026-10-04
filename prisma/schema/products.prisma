@@ -1,0 +1,52 @@
+model Brand {
+    name String @id
+
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
+    products  Products[]
+
+    @@map("brands")
+}
+
+model Offer {
+    name String @id
+
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
+    products  Products[]
+
+    @@map("offers")
+}
+
+model Category {
+    name String @id
+
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
+    products  Products[]
+
+    @@map("categories")
+}
+
+model Products {
+    id               String    @id @default(uuid())
+    sku              String    @unique
+    rating           Decimal?  @db.Decimal(1, 1)
+    title            String
+    description      String?
+    price            Decimal   @db.Decimal(10, 2)
+    discounted_price Decimal?  @db.Decimal(10, 2)
+    offer_name       String?
+    offer            Offer?    @relation(fields: [offer_name], references: [name])
+    brand_name       String?
+    brand            Brand?    @relation(fields: [brand_name], references: [name])
+    category_name    String?
+    category         Category? @relation(fields: [category_name], references: [name])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([brand_name], name: "idx_brand_name")
+    @@index([category_name], name: "idx_category_name")
+    @@map("products")
+}
