@@ -5,12 +5,15 @@ model Cart {
     productId String
     product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
     quantity  Int     @default(1)
-    color     String
+    colorName String
+    colorId   String
+    color     Color   @relation(fields: [colorId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@index([userId], name: "idx_cart_user_id")
     @@index([productId], name: "idx_cart_product_id")
+    @@index([colorId], name: "idx_cart_color_id")
     @@map("carts")
 }
