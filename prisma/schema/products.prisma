@@ -62,6 +62,7 @@ model Product {
     carts      Cart[]
     colors     Color[]
     orderItems OrderItem[]
+    reviews    Review[]
 
     @@index([brand_name], name: "idx_brand_name")
     @@index([category_name], name: "idx_category_name")

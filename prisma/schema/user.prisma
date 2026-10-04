@@ -11,6 +11,7 @@ model User {
     updatedAt DateTime @updatedAt
     carts     Cart[]
     orders    Order[]
+    reviews   Review[]
 
     @@map("users")
 }
