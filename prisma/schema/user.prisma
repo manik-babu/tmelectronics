@@ -1,0 +1,20 @@
+model User {
+    id       String  @id @default(uuid())
+    name     String?
+    email    String? @unique
+    phone    String? @unique
+    password String?
+    role     String  @default("USER")
+    image    String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("users")
+}
+
+enum UserRole {
+    USER
+    ADMIN
+    GUEST
+}
