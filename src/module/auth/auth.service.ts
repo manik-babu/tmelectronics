@@ -13,10 +13,13 @@ const signup = async (userData: SignupRequest) => {
     })
     return created
 }
-const isUserExists = async (phone: string) => {
+const isUserExists = async (phone: string, email: string) => {
     const user = await prisma.user.count({
         where: {
-            phone: phone,
+            OR: [
+                { phone: phone },
+                { email: email },
+            ],
         },
     })
     return user > 0

@@ -11,7 +11,7 @@ const signup = catchAsync(async (req: Request, res: Response) => {
 
     data.password = hash; // Replace the plain password with the hashed password
     const created = await AuthService.signup(data); // Call the signup service with the hashed password
-    const isExists = await AuthService.isUserExists(data.phone);
+    const isExists = await AuthService.isUserExists(data.phone, data.email);
 
     if (isExists) {
         return sendResponse(res, {
