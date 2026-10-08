@@ -40,6 +40,12 @@ const login = catchAsync(async (req: Request, res: Response) => {
     const token = jwt.sign(tokenData, env.JWT_SECRET, {
         expiresIn: 30 * 24 * 60 * 60, // 30 days
     });
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // Set secure flag in production
+        sameSite: "lax", // Adjust sameSite attribute as needed
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    })
 
     sendResponse(res, {
         code: 200,
