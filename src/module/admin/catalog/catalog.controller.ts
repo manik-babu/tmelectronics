@@ -13,7 +13,18 @@ const addBrand = catchAsync(async (req: Request, res: Response) => {
         data: brand,
     });
 });
+const addCategory = catchAsync(async (req: Request, res: Response) => {
+    const { name } = req.body;
+    const category = await CatalogService.addCategory(name);
+    sendResponse(res, {
+        code: 201,
+        ok: true,
+        message: "Category added successfully",
+        data: category,
+    });
+});
 
 export const CatalogController = {
-    addBrand
+    addBrand,
+    addCategory
 }
