@@ -23,8 +23,19 @@ const addCategory = catchAsync(async (req: Request, res: Response) => {
         data: category,
     });
 });
+const addOffer = catchAsync(async (req: Request, res: Response) => {
+    const data = req.body;
+    const offer = await CatalogService.addOffer(data);
+    sendResponse(res, {
+        code: 201,
+        ok: true,
+        message: "Offer added successfully",
+        data: offer,
+    });
+});
 
 export const CatalogController = {
     addBrand,
-    addCategory
+    addCategory,
+    addOffer
 }
