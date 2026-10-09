@@ -23,7 +23,7 @@ export const uploadToCloudinary = async (options: UploadToCloudinaryOptions): Pr
     return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
             {
-                folder: options.folder,
+                folder: `${env.CLOUDINARY.CLOUDINARY_FOLDER}/${options.folder}`,
                 resource_type: options.resource_type || "auto",
                 public_id: options.file.originalname.split('.').slice(0, -1).join('.') + "_" + new Date().getTime() + Math.floor(Math.random() * 10000), // Use original file name without extension as public_id,
                 use_filename: true, // use the original file name as the public_id,
