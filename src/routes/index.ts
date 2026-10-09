@@ -10,4 +10,5 @@ const router = Router();
 router.use("/auth", authRouter);
 router.use("/admin/product", auth(UserRole.ADMIN), adminProductRouter);
 router.use("/admin/catalog", auth(UserRole.ADMIN), catalogRouter);
+router.use("/public", catalogRouter);
 export const apiRouter = router;
