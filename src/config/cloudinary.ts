@@ -3,9 +3,9 @@ import { env } from './env';
 import multer from 'multer';
 
 cloudinary.config({
-    cloud_name: env.CLOUDINARY_CLOUD_NAME,
-    api_key: env.CLOUDINARY_API_KEY,
-    api_secret: env.CLOUDINARY_API_SECRET,
+    cloud_name: env.CLOUDINARY.CLOUDINARY_CLOUD_NAME,
+    api_key: env.CLOUDINARY.CLOUDINARY_API_KEY,
+    api_secret: env.CLOUDINARY.CLOUDINARY_API_SECRET,
 });
 
 const storage = multer.memoryStorage();

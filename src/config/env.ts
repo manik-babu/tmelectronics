@@ -12,13 +12,23 @@ type Env = {
     FRONTEND_URL: string;
     JWT_SECRET: string;
     BACKEND_URL: string;
-    CLOUDINARY_CLOUD_NAME: string;
-    CLOUDINARY_API_KEY: string;
-    CLOUDINARY_API_SECRET: string;
-    CLOUDINARY_FOLDER: string;
-    APP_EMAIL: string;
-    APP_PASSWORD: string;
-    APP_HOST: string;
+    CLOUDINARY: {
+        CLOUDINARY_CLOUD_NAME: string;
+        CLOUDINARY_API_KEY: string;
+        CLOUDINARY_API_SECRET: string;
+        CLOUDINARY_FOLDER: string;
+    };
+    APP: {
+        APP_EMAIL: string;
+        APP_PASSWORD: string;
+        APP_HOST: string;
+    };
+    ADMIN: {
+        ADMIN_EMAIL: string;
+        ADMIN_PASSWORD: string;
+        ADMIN_NAME: string;
+        ADMIN_PHONE: string;
+    }
 }
 
 const requiredEnvVars = [
@@ -37,6 +47,11 @@ const requiredEnvVars = [
     "APP_EMAIL",
     "APP_PASSWORD",
     "APP_HOST",
+
+    "ADMIN_EMAIL",
+    "ADMIN_PASSWORD",
+    "ADMIN_NAME",
+    "ADMIN_PHONE"
 ];
 requiredEnvVars.forEach((varName) => {
     if (!process.env[varName]) {
@@ -50,13 +65,21 @@ export const env: Env = {
     FRONTEND_URL: process.env.FRONTEND_URL || '',
     JWT_SECRET: process.env.JWT_SECRET || '',
     BACKEND_URL: process.env.BACKEND_URL || '',
-
-    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || '',
-    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || '',
-    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || '',
-    CLOUDINARY_FOLDER: process.env.CLOUDINARY_FOLDER || '',
-
-    APP_EMAIL: process.env.APP_EMAIL || '',
-    APP_PASSWORD: process.env.APP_PASSWORD || '',
-    APP_HOST: process.env.APP_HOST || '',
+    CLOUDINARY: {
+        CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || '',
+        CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || '',
+        CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || '',
+        CLOUDINARY_FOLDER: process.env.CLOUDINARY_FOLDER || '',
+    },
+    APP: {
+        APP_EMAIL: process.env.APP_EMAIL || '',
+        APP_PASSWORD: process.env.APP_PASSWORD || '',
+        APP_HOST: process.env.APP_HOST || ''
+    },
+    ADMIN: {
+        ADMIN_EMAIL: process.env.ADMIN_EMAIL || '',
+        ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || '',
+        ADMIN_NAME: process.env.ADMIN_NAME || '',
+        ADMIN_PHONE: process.env.ADMIN_PHONE || '',
+    }
 };
