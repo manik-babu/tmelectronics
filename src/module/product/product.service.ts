@@ -9,8 +9,8 @@ const getProducts = async (filter: ProductFilter) => {
         where: {
             AND: [
                 text ? { title: { contains: text, mode: "insensitive" } } : {},
-                brand ? { brand: { contains: brand, mode: "insensitive" } } : {},
-                category ? { category: { contains: category, mode: "insensitive" } } : {},
+                brand ? { brand_name: { contains: brand, mode: "insensitive" } } : {},
+                category ? { category_name: { contains: category, mode: "insensitive" } } : {},
                 offer ? { offer_name: { contains: offer, mode: "insensitive" } } : {},
             ],
         },
