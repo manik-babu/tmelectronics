@@ -17,6 +17,9 @@ const getProducts = async (filter: ProductFilter) => {
         include: {
             productImages: {
                 take: 1,
+                orderBy: {
+                    id: "asc",
+                },
                 select: {
                     url: true,
                 },
