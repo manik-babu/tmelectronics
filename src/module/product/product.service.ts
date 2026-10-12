@@ -14,9 +14,22 @@ const getProducts = async (filter: ProductFilter) => {
                 offer ? { offer_name: { contains: offer, mode: "insensitive" } } : {},
             ],
         },
+        include: {
+            productImages: {
+                take: 1,
+                select: {
+                    url: true,
+                },
+            }
+        },
         orderBy: price ? { price: price } : undefined,
         skip: page ? (page - 1) * 10 : 0,
         take: 10,
+        omit: {
+            description: true,
+            createdAt: true,
+            updatedAt: true,
+        },
     });
     const meta = {
         currentPage: page || 1,
