@@ -42,7 +42,33 @@ const getProducts = async (filter: ProductFilter) => {
 
     return { products, meta };
 }
+const getProductById = async (id: string) => {
+    const product = await prisma.product.findUnique({
+        where: {
+            id: id,
+        },
+        include: {
+            productImages: {
+                orderBy: {
+                    id: "asc",
+                },
+                select: {
+                    url: true,
+                },
+            },
+            colors: true,
+        },
+
+        omit: {
+            createdAt: true,
+            updatedAt: true,
+        },
+    });
+
+    return product;
+}
 
 export const productService = {
     getProducts,
+    getProductById,
 };

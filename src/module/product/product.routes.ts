@@ -5,5 +5,5 @@ import { productController } from "./product.controller";
 const router = Router();
 
 router.get("/", productController.getProducts);
-
+router.get("/:id", productController.getProductById);
 export const productRouter = router;
