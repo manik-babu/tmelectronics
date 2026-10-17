@@ -56,7 +56,11 @@ const getProductById = async (id: string) => {
                     url: true,
                 },
             },
-            colors: true,
+            colors: {
+                omit: {
+                    productId: true,
+                }
+            },
         },
 
         omit: {
