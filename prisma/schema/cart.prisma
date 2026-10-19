@@ -5,7 +5,6 @@ model Cart {
     productId String
     product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
     quantity  Int     @default(1)
-    colorName String
     colorId   String
     color     Color   @relation(fields: [colorId], references: [id], onDelete: Cascade)
 
