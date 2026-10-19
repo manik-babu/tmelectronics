@@ -8,3 +8,6 @@ export const addToCartSchema = z.object({
 export const updateCartQuantitySchema = z.object({
     quantity: z.number().min(1, "Quantity must be at least 1"),
 });
+export const updateCartColorSchema = z.object({
+    colorId: z.string().min(1, "Color ID is required"),
+});

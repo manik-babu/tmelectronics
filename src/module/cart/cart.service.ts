@@ -112,10 +112,31 @@ const updateCartQuantity = async (cartId: string, userId: string, quantity: numb
     });
     return updatedCart;
 }
+const updateCartColor = async (cartId: string, userId: string, colorId: string) => {
+    const cart = await prisma.cart.count({
+        where: {
+            id: cartId,
+            userId
+        }
+    })
+    if (cart === 0) {
+        throw new AppError(404, "Cart not found or you are not authorized to update this cart");
+    }
+    const updatedCart = await prisma.cart.update({
+        where: {
+            id: cartId
+        },
+        data: {
+            colorId
+        }
+    });
+    return updatedCart;
+}
 
 export const cartService = {
     addCart,
     deleteCart,
     getCartByUserId,
     updateCartQuantity,
+    updateCartColor,
 }

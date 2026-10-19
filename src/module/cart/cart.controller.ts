@@ -46,10 +46,23 @@ const updateCartQuantity = catchAsync(async (req: Request, res: Response) => {
         data: cart
     })
 })
+const updateCartColor = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.user?.id as string;
+    const cartId = req.params.id as string;
+    const { colorId } = req.body;
+    const cart = await cartService.updateCartColor(cartId, userId, colorId);
+    sendResponse(res, {
+        code: 200,
+        ok: true,
+        message: "Cart updated successfully",
+        data: cart
+    })
+})
 
 export const cartController = {
     addCart,
     deleteCart,
     getCartByUserId,
     updateCartQuantity,
+    updateCartColor,
 }
