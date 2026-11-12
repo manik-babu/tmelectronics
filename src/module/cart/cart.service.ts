@@ -76,18 +76,18 @@ const getCartByUserId = async (userId: string) => {
         return {
             id: item.id,
             quantity: item.quantity,
+            color: {
+                id: item.color.id,
+                name: item.color.name,
+            },
             product: {
                 id: item.product.id,
                 title: item.product.title,
                 price: item.product.price,
                 discounted_price: item.product.discounted_price,
-                colors: item.product.colors
-            },
-            color: {
-                id: item.color.id,
-                name: item.color.name,
-            },
-            productImage: item.product.productImages[0]?.url || null,
+                image: item.product.productImages[0]?.url || null,
+                colors: item.product.colors,
+            }
         }
     })
     return formattedCart;
