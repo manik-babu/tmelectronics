@@ -1,4 +1,7 @@
+import AppError from "../../helper/appError";
 import { prisma } from "../../lib/prisma";
+import { nanoId } from "../../utils/nanoId";
+import { OrderDetails, OrderProduct, OrderProductDetails } from "./public.interface";
 
 const getAllCategories = async () => {
     const categories = await prisma.category.findMany({
@@ -53,10 +56,85 @@ const getCartsProductById = async (productId: string) => {
     });
     return product;
 }
+const getOrderProductById = async ({ productId, colorId, quantity }: OrderProduct) => {
+    const [product, color] = await Promise.all([
+        prisma.product.findUnique({
+            where: {
+                id: productId
+            },
+            select: {
+                id: true,
+                sku: true,
+                title: true,
+                price: true,
+                discounted_price: true,
+            }
+        }),
+        prisma.color.findUnique({
+            where: {
+                id: colorId,
+                productId: productId
+            },
+            select: {
+                id: true,
+                name: true,
+                stock: true,
+            }
+        })]);
+    if (!product) {
+        throw new AppError(404, "Selected product no longer available");
+    }
+    if (!color) {
+        throw new AppError(404, `Color not available for ${product.title}`);
+    }
+    if (color.stock < quantity) {
+        throw new AppError(400, `Only ${color.stock} items available for ${product.title} in ${color.name}`);
+    }
+    return {
+        product: {
+            id: product.id,
+            sku: product.sku,
+            title: product.title,
+            price: Number(product.discounted_price ?? product.price)
+        },
+        color,
+        quantity,
+    }
+}
+const placeOrder = async (details: OrderDetails, products: OrderProductDetails[], totalAmount: number) => {
+    const order = await prisma.$transaction(async (ts) => {
+        const newOrder = await ts.order.create({
+            data: {
+                orderCode: `ORD-${nanoId()}`,
+                name: details.name,
+                phone: details.phone,
+                address: details.address,
+                userId: details.userId,
+                note: details.note,
+                totalAmount: totalAmount,
+            },
+        });
+        await ts.orderItem.createMany({
+            data: products.map((item) => ({
+                orderId: newOrder.id,
+                productId: item.product.id,
+                productSku: item.product.sku,
+                productTitle: item.product.title,
+                colorId: item.color.id,
+                quantity: item.quantity,
+                price: item.product.price,
+            })),
+        });
+        return newOrder;
+    });
+    return order;
+}
 
 export const publicService = {
     getAllCategories,
     getAllBrands,
     getAllOffers,
     getCartsProductById,
+    getOrderProductById,
+    placeOrder,
 }

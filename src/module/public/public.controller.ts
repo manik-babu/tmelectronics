@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { publicService } from "./public.service";
-import { GuestCartItem } from "./public.interface";
+import { GuestCartItem, OrderDetails, OrderProduct, OrderProductDetails, OrderRequest } from "./public.interface";
 
 const gestAllCategories = catchAsync(async (req: Request, res: Response) => {
     const categories = await publicService.getAllCategories();
@@ -66,10 +66,34 @@ const getGuestCartsDetails = catchAsync(async (req: Request, res: Response) => {
         data: productDetails,
     });
 });
+const placeOrder = catchAsync(async (req: Request, res: Response) => {
+    const { details, products }: OrderRequest = req.body;
+
+    // Fetch product details for each product in the order
+    const orderProducts = await Promise.all(products.map(async (item: OrderProduct) => {
+        return publicService.getOrderProductById(item);
+    }));
+
+    // Calculate total amount
+    const totalAmount = orderProducts.reduce((total, item) => {
+        return total + (item.product.price * item.quantity);
+    }, 0);
+
+    // Place the order using the service
+    const order = await publicService.placeOrder(details, orderProducts, totalAmount);
+
+    sendResponse(res, {
+        code: 200,
+        ok: true,
+        message: "Order placed successfully",
+        data: order,
+    });
+});
 
 export const publicController = {
     gestAllCategories,
     getAllBrands,
     getAllOffers,
     getGuestCartsDetails,
+    placeOrder,
 }

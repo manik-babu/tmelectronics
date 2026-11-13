@@ -1,14 +1,14 @@
 model Order {
-    id        String      @id @default(cuid())
-    orderCode String      @unique
-    userId    String?
-    user      User?       @relation(fields: [userId], references: [id])
-    total     Decimal     @db.Decimal(10, 2)
-    name      String
-    phone     String
-    address   String
-    note      String?
-    status    OrderStatus @default(PENDING)
+    id          String      @id @default(cuid())
+    orderCode   String      @unique
+    userId      String?
+    user        User?       @relation(fields: [userId], references: [id])
+    totalAmount Decimal     @db.Decimal(10, 2)
+    name        String
+    phone       String
+    address     String
+    note        String?
+    status      OrderStatus @default(PENDING)
 
     orderItems OrderItem[]
     createdAt  DateTime    @default(now())
