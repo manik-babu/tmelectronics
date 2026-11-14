@@ -101,9 +101,41 @@ const getOrderProductById = async ({ productId, colorId, quantity }: OrderProduc
         quantity,
     }
 }
-const placeOrder = async (details: OrderDetails, products: OrderProductDetails[], totalAmount: number) => {
-    const order = await prisma.$transaction(async (ts) => {
-        const newOrder = await ts.order.create({
+const productAvailabilityCheck = async (products: OrderProduct[]) => {
+    const quantitiesByColor = new Map<string, number>();
+    for (const item of products) {
+        quantitiesByColor.set(
+            item.colorId,
+            (quantitiesByColor.get(item.colorId) ?? 0) + item.quantity,
+        );
+    }
+    for (const [colorId, quantity] of quantitiesByColor) {
+        const color = await prisma.color.findUnique({
+            where: {
+                id: colorId,
+            },
+            select: {
+                name: true,
+                stock: true,
+                product: {
+                    select: {
+                        title: true,
+                    }
+                }
+            },
+        });
+        if (!color) {
+            throw new AppError(404, `Color with ID ${colorId} not found`);
+        }
+        if (color.stock < quantity) {
+            throw new AppError(400, `Only ${color.stock} items available for color ${color.name} in ${color.product.title}`);
+        }
+    }
+    return quantitiesByColor;
+}
+const placeOrder = async (details: OrderDetails, products: OrderProductDetails[], totalAmount: number, quantitiesByColor: Map<string, number>) => {
+    return prisma.$transaction(async (tx) => {
+        const newOrder = await tx.order.create({
             data: {
                 orderCode: `ORD-${nanoId()}`,
                 name: details.name,
@@ -111,10 +143,11 @@ const placeOrder = async (details: OrderDetails, products: OrderProductDetails[]
                 address: details.address,
                 userId: details.userId,
                 note: details.note,
-                totalAmount: totalAmount,
+                totalAmount,
             },
         });
-        await ts.orderItem.createMany({
+
+        await tx.orderItem.createMany({
             data: products.map((item) => ({
                 orderId: newOrder.id,
                 productId: item.product.id,
@@ -125,9 +158,21 @@ const placeOrder = async (details: OrderDetails, products: OrderProductDetails[]
                 price: item.product.price,
             })),
         });
+        for (const [colorId, quantity] of quantitiesByColor) {
+            await tx.color.update({
+                where: {
+                    id: colorId,
+                },
+                data: {
+                    stock: {
+                        decrement: quantity,
+                    },
+                },
+            });
+        }
+
         return newOrder;
     });
-    return order;
 }
 
 export const publicService = {
@@ -137,4 +182,5 @@ export const publicService = {
     getCartsProductById,
     getOrderProductById,
     placeOrder,
+    productAvailabilityCheck,
 }

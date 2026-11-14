@@ -69,6 +69,9 @@ const getGuestCartsDetails = catchAsync(async (req: Request, res: Response) => {
 const placeOrder = catchAsync(async (req: Request, res: Response) => {
     const { details, products }: OrderRequest = req.body;
 
+    // Check product availability before placing the order
+    const quantitiesByColor = await publicService.productAvailabilityCheck(products);
+
     // Fetch product details for each product in the order
     const orderProducts = await Promise.all(products.map(async (item: OrderProduct) => {
         return publicService.getOrderProductById(item);
@@ -80,7 +83,7 @@ const placeOrder = catchAsync(async (req: Request, res: Response) => {
     }, 0);
 
     // Place the order using the service
-    const order = await publicService.placeOrder(details, orderProducts, totalAmount);
+    const order = await publicService.placeOrder(details, orderProducts, totalAmount, quantitiesByColor);
 
     sendResponse(res, {
         code: 200,
