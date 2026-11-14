@@ -14,7 +14,7 @@ const router = Router();
 router.use("/auth", authRouter);
 router.use("/admin/products", auth(UserRole.ADMIN), adminProductRouter);
 router.use("/admin/catalog", auth(UserRole.ADMIN), catalogRouter);
-router.use("/api/v1/users", auth(UserRole.USER), userRouter);
+router.use("/users", auth(UserRole.USER), userRouter);
 router.use("/public", publicRouter);
 router.use("/products", productRouter);
 router.use("/carts", auth(UserRole.USER), cartRouter);
