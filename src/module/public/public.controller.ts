@@ -92,6 +92,20 @@ const placeOrder = catchAsync(async (req: Request, res: Response) => {
         data: order,
     });
 });
+const cancelOrder = catchAsync(async (req: Request, res: Response) => {
+    const orderId = req.params.orderId as string;
+    const userId = req.user === null ? null : req.user?.id as string;
+
+    // Cancel the order using the service
+    await publicService.cancelOrder(orderId, userId);
+
+    sendResponse(res, {
+        code: 200,
+        ok: true,
+        message: "Order canceled successfully",
+        data: null,
+    });
+});
 
 export const publicController = {
     gestAllCategories,
@@ -99,4 +113,5 @@ export const publicController = {
     getAllOffers,
     getGuestCartsDetails,
     placeOrder,
+    cancelOrder,
 }

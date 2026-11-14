@@ -1,3 +1,4 @@
+import { OrderStatus } from "../../../generated/prisma/client";
 import AppError from "../../helper/appError";
 import { prisma } from "../../lib/prisma";
 import { nanoId } from "../../utils/nanoId";
@@ -174,6 +175,39 @@ const placeOrder = async (details: OrderDetails, products: OrderProductDetails[]
         return newOrder;
     });
 }
+const cancelOrder = async (orderId: string, userId: string | null) => {
+    const order = await prisma.order.findUnique({
+        where: {
+            id: orderId,
+        },
+        select: {
+            id: true,
+            userId: true,
+            status: true,
+        },
+    });
+
+    if (!order) {
+        throw new AppError(404, "Order not found");
+    }
+
+    if (order.userId && order.userId !== userId) {
+        throw new AppError(403, "You are not authorized to cancel this order");
+    }
+
+    if (order.status === OrderStatus.CANCELLED) {
+        throw new AppError(400, "Order is already canceled");
+    }
+
+    await prisma.order.update({
+        where: {
+            id: orderId,
+        },
+        data: {
+            status: OrderStatus.CANCELLED,
+        },
+    });
+}
 
 export const publicService = {
     getAllCategories,
@@ -183,4 +217,5 @@ export const publicService = {
     getOrderProductById,
     placeOrder,
     productAvailabilityCheck,
+    cancelOrder,
 }

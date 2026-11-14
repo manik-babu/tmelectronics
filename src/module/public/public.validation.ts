@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { OrderStatus } from "../../../generated/prisma/enums";
 
 export const GuestCartsSchema = z.array(z.object({
     productId: z.string().nonempty("Product ID is required"),
